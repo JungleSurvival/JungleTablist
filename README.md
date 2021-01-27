@@ -8,5 +8,5 @@ Tablist system inspired by [TheMolkaPl](https://github.com/TheMolkaPL) tablist f
 - Remove debuging info
 ```
 ## Special thanks to:
-[CDFN](https://github.com/CDFN)
+[CDFN](https://github.com/CDFN) for help in creating the plugin.
 
