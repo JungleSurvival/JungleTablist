@@ -1,11 +1,11 @@
 # JungleTablist
 
-<s>Tablist<s> system inspired by [TheMolkaPl](https://github.com/TheMolkaPL) tablist form [kmpack](https://kwadratowa.tv/kmpack)
+Tablist system inspired by [TheMolkaPl](https://github.com/TheMolkaPL) tablist form [kmpack](https://kwadratowa.tv/kmpack)
 
 ## ToDo list
 
 ```
-<s>- Remove debuging info<s>
+- add suport for lifes and skull plugin
 ```
 ## Screenshot of tablist
 
