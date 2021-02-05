@@ -5,7 +5,7 @@ Tablist system inspired by [TheMolkaPl](https://github.com/TheMolkaPL) tablist f
 ## ToDo list
 
 ```
-- Remove debuging info
+<s>- Remove debuging info<s>
 ```
 ## Screenshot of tablist
 
