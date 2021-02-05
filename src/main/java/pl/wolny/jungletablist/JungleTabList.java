@@ -54,7 +54,9 @@ public final class JungleTabList extends JavaPlugin implements Listener {
         if(!setupEconomy()){
             for (int i = 0; i < 6; i++) {
                 System.out.println("Can not set economy - shuting down");
+
             }
+            Bukkit.getPluginManager().disablePlugin(this);
         }
         main = this;
         Bukkit.getPluginManager().registerEvents(this, this);

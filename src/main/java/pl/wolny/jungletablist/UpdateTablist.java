@@ -38,7 +38,7 @@ public class UpdateTablist {
         connection.sendPacket(pack);
         PacketPlayOutPlayerInfo ping = new PacketPlayOutPlayerInfo(UPDATE_LATENCY, entityPlayer);
         connection.sendPacket(ping);
-        System.out.println(id + " " + name + " " +  entity.getUniqueId());
+        //System.out.println(id + " " + name + " " +  entity.getUniqueId());
     }
     public void update(Player p){
             gen(p);
@@ -52,7 +52,7 @@ public class UpdateTablist {
             List<String> YamlUsers = yamlFile.getStringList("users");
             Komparator komp = new Komparator();
             //List<String> SortYamlUsers = YamlUsers.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-            System.out.println(YamlUsers.toString());
+            //System.out.println(YamlUsers.toString());
             int i = 2;
             int outoflimit = 0;
             boolean isOutOfLimit = false;
@@ -62,7 +62,7 @@ public class UpdateTablist {
                 if(i>38){
                     isOutOfLimit = true;
                     outoflimit++;
-                    System.out.println(isOutOfLimit);
+                    //System.out.println(isOutOfLimit);
                     continue;
                 }
                 //
@@ -87,7 +87,7 @@ public class UpdateTablist {
                     i++;
                 }
 
-                System.out.println("!!! " + object.getName() + " " + object.getHajs());
+                //tem.out.println("!!! " + object.getName() + " " + object.getHajs());
             }
             java.util.Collections.sort(Queue);
             for (String str: Queue) {

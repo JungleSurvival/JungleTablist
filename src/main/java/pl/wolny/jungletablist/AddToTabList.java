@@ -39,6 +39,6 @@ public class AddToTabList{
         connection.sendPacket(pack);
         PacketPlayOutPlayerInfo ping = new PacketPlayOutPlayerInfo(UPDATE_LATENCY, entityPlayer);
         connection.sendPacket(ping);
-        System.out.println(id + " " + name + " " +  entity.getUniqueId());
+        //System.out.println(id + " " + name + " " +  entity.getUniqueId());
     }
 }
