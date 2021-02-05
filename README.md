@@ -1,6 +1,6 @@
 # JungleTablist
 
-Tablist system inspired by [TheMolkaPl](https://github.com/TheMolkaPL) tablist form [kmpack](https://kwadratowa.tv/kmpack)
+<s>Tablist<s> system inspired by [TheMolkaPl](https://github.com/TheMolkaPL) tablist form [kmpack](https://kwadratowa.tv/kmpack)
 
 ## ToDo list
 
