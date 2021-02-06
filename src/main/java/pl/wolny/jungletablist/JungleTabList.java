@@ -33,12 +33,6 @@ import java.util.stream.Collectors;
 
 public final class JungleTabList extends JavaPlugin implements Listener {
     public Scoreboard sb;
-    public Team t_usr;
-    public Team t_player;
-    private final Object[] profileCache = new Object[80];
-    private static Constructor<?> gameProfileConstructor;
-    private static final String UUID_PATTERN = "00000000-0000-%s-0000-000000000000";
-    private static Constructor<?> PLAYER_INFO_CONSTRUCTOR;
     public static JungleTabList main;
     public static Plugin getMain() {
         return main;
@@ -47,6 +41,7 @@ public final class JungleTabList extends JavaPlugin implements Listener {
     public static Economy getEconomy() {
         return econ;
     }
+    protected boolean trueping = false;
 
     @Override
     public void onEnable() {
@@ -59,12 +54,9 @@ public final class JungleTabList extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().disablePlugin(this);
         }
         main = this;
+        ConfigMenager.genConfig();
+        trueping = this.getConfig().getBoolean("trueping");
         Bukkit.getPluginManager().registerEvents(this, this);
-        sb = Bukkit.getScoreboardManager().getMainScoreboard();
-        for(Team team2 : sb.getTeams()) {
-            team2.unregister();
-        }
-
     }
 
     @Override
@@ -89,23 +81,19 @@ public final class JungleTabList extends JavaPlugin implements Listener {
             yamlFile.set("users", YamlUsers);
         }
         yamlFile.save(f);
+        p.setPlayerListHeader(this.getConfig().getString("brand"));
         GenerateTabList generateTabList = new GenerateTabList();
-        UpdateTablist updateTablist = new UpdateTablist();
-        generateTabList.gen(e.getPlayer());
+        generateTabList.gen(e.getPlayer(), trueping, PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER);
         new BukkitRunnable()
         {
             public void run()
             {
-                updateTablist.update(p);
+                generateTabList.gen(p, trueping, PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_DISPLAY_NAME);
             }
         }.runTaskTimerAsynchronously(this, 100, 100);
     }
     @EventHandler
     public void QuitEvent(PlayerQuitEvent e) throws IOException {
-        File f = new File("plugins/JungleTabList/playerdata.yml");
-        YamlConfiguration yamlFile = YamlConfiguration.loadConfiguration(f);
-        yamlFile.set(e.getPlayer().getName() + ".online", "false");
-        yamlFile.save(f);
         for (Team sb: e.getPlayer().getScoreboard().getTeams()) {
             sb.unregister();
         }
