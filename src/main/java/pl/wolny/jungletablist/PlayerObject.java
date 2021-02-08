@@ -10,13 +10,15 @@ public class PlayerObject{
     private String id;
     private int deaths;
     private int ping;
+    private String[] skin;
 
-    public PlayerObject(double hajs, String playerName, String id, int deaths, int pingnew){
+    public PlayerObject(double hajs, String playerName, String id, int deaths, int pingnew, String[] skin){
         this.hajs = hajs;
         this.playerName = playerName;
         this.id = id;
         this.deaths = deaths;
         this.ping = pingnew;
+        this.skin = skin;
     }
 
     double getHajs(){ return hajs; }
@@ -25,6 +27,9 @@ public class PlayerObject{
     int getDeaths(){return deaths;}
     int getPing(){
         return ping;
+    }
+    String[] getskin(){
+        return skin;
     }
 
 }

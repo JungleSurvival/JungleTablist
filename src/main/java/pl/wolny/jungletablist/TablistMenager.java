@@ -1,6 +1,7 @@
 package pl.wolny.jungletablist;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -14,7 +15,7 @@ import java.util.UUID;
 import static net.minecraft.server.v1_16_R3.PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_LATENCY;
 
 public class TablistMenager {
-    public void modifyTablist(Player p, String name, String id, int ping ,PacketPlayOutPlayerInfo.EnumPlayerInfoAction type) {
+    public void modifyTablist(Player p, String name, String id, int ping, String texturesvalue, String texturesignature ,PacketPlayOutPlayerInfo.EnumPlayerInfoAction type) {
         MinecraftServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
         WorldServer nmsWorld = ((CraftWorld)p.getWorld()).getHandle();
         String UUID_PATTERN = "00000000-0000-%s-0000-000000000000";
@@ -24,12 +25,18 @@ public class TablistMenager {
         CraftPlayer entity = entityPlayer.getBukkitEntity();
         entity.setPlayerListName(name);
         entity.setGameMode(GameMode.ADVENTURE);
-        entity.getHandle().ping = ping;
         PacketPlayOutPlayerInfo pack = new PacketPlayOutPlayerInfo(type, entityPlayer);
         PlayerConnection connection = ((CraftPlayer)p.getPlayer()).getHandle().playerConnection;
+        if(type == PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER){
+            profile.getProperties().put("textures", new Property("textures", texturesvalue, texturesignature));
+        }
         connection.sendPacket(pack);
-        PacketPlayOutPlayerInfo pingPacket = new PacketPlayOutPlayerInfo(UPDATE_LATENCY, entityPlayer);
-        connection.sendPacket(pingPacket);
+        if(type == PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER){
+            entity.getHandle().ping = ping;
+            PacketPlayOutPlayerInfo pingPacket = new PacketPlayOutPlayerInfo(UPDATE_LATENCY, entityPlayer);
+            connection.sendPacket(pingPacket);
+        }
+
         //System.out.println(id + " " + name + " " +  entity.getUniqueId());
     }
     public void removeFromTab(Player p, String id) {
