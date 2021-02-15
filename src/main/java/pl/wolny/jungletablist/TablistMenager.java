@@ -27,7 +27,8 @@ public class TablistMenager {
         entity.setGameMode(GameMode.ADVENTURE);
         PacketPlayOutPlayerInfo pack = new PacketPlayOutPlayerInfo(type, entityPlayer);
         PlayerConnection connection = ((CraftPlayer)p.getPlayer()).getHandle().playerConnection;
-        if(type == PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER && JungleTabList.getMain().getServer().getOnlineMode()){
+        if(texturesignature != null && texturesvalue != null && type == PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER){
+            profile.getProperties().clear();
             profile.getProperties().put("textures", new Property("textures", texturesvalue, texturesignature));
         }
         connection.sendPacket(pack);

@@ -20,10 +20,7 @@ import java.util.stream.Collectors;
 
 public class GenerateTabList {
 
-    private static String skinvalue = "eyJ0aW1lc3RhbXAiOjE0MTEyNjg3OTI3NjUsInByb2ZpbGVJZCI6IjNmYmVjN2RkMGE1ZjQwYmY5ZDExODg1YTU0NTA3MTEyIiwicHJvZmlsZU5hbWUiOiJsYXN0X3VzZXJuYW1lIiwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzg0N2I1Mjc5OTg0NjUxNTRhZDZjMjM4YTFlM2MyZGQzZTMyOTY1MzUyZTNhNjRmMzZlMTZhOTQwNWFiOCJ9fX0=";
-    private static String skinsignature = "u8sG8tlbmiekrfAdQjy4nXIcCfNdnUZzXSx9BE1X5K27NiUvE1dDNIeBBSPdZzQG1kHGijuokuHPdNi/KXHZkQM7OJ4aCu5JiUoOY28uz3wZhW4D+KG3dH4ei5ww2KwvjcqVL7LFKfr/ONU5Hvi7MIIty1eKpoGDYpWj3WjnbN4ye5Zo88I2ZEkP1wBw2eDDN4P3YEDYTumQndcbXFPuRRTntoGdZq3N5EBKfDZxlw4L3pgkcSLU5rWkd5UH4ZUOHAP/VaJ04mpFLsFXzzdU4xNZ5fthCwxwVBNLtHRWO26k/qcVBzvEXtKGFJmxfLGCzXScET/OjUBak/JEkkRG2m+kpmBMgFRNtjyZgQ1w08U6HHnLTiAiio3JswPlW5v56pGWRHQT5XWSkfnrXDalxtSmPnB5LmacpIImKgL8V9wLnWvBzI7SHjlyQbbgd+kUOkLlu7+717ySDEJwsFJekfuR6N/rpcYgNZYrxDwe4w57uDPlwNL6cJPfNUHV7WEbIU1pMgxsxaXe8WSvV87qLsR7H06xocl2C0JFfe2jZR4Zh3k9xzEnfCeFKBgGb4lrOWBu1eDWYgtKV67M2Y+B3W5pjuAjwAxn0waODtEn/3jKPbc/sxbPvljUCw65X+ok0UUN1eOwXV5l2EGzn05t3Yhwq19/GxARg63ISGE8CKw=";
-
-    public void gen(Player p, boolean trueping, PacketPlayOutPlayerInfo.EnumPlayerInfoAction type) {
+    public void gen(Player p, boolean trueping, String skinvalue, String skinsignature, PacketPlayOutPlayerInfo.EnumPlayerInfoAction type) {
         if (p != null) {
             p.setPlayerListFooter("§7Twoje saldo wynosi: §r§a$" + (int)JungleTabList.getEconomy().getBalance(p));
             TablistMenager menager = new TablistMenager();
@@ -37,7 +34,7 @@ public class GenerateTabList {
             int i = 2;
             int outoflimit = 0;
             boolean isOutOfLimit = false;
-            List<String> Queue = new ArrayList<>();
+            List<PlayerObject> Queue = new ArrayList<>();
             List<PlayerObject> PlayerObjectList = new ArrayList<>();
             for (String str: YamlUsers) {
                 if(i>38){
@@ -67,7 +64,7 @@ public class GenerateTabList {
                 }else {
                     OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(str);
                     if(player != null){
-                        Queue.add("§7" + (int)JungleTabList.getEconomy().getBalance(player) + " §8" + str);
+                        Queue.add(new PlayerObject(JungleTabList.getEconomy().getBalance(player), "§7" + (int)JungleTabList.getEconomy().getBalance(player) + " §8" + str, "0", 0, 0, new String[]{"", ""}));
                     }
                 }
             }
@@ -75,17 +72,20 @@ public class GenerateTabList {
             for (PlayerObject object: PlayerObjectList) {
                 if (i < 10) {
                     //System.out.println(object.getPing());
+                    //System.out.println(object.getName() + " ONLINE");
                     menager.modifyTablist(p, object.getName(), "0" + i, object.getPing(), object.getskin()[0], object.getskin()[1],  type);
                     i++;
                 }else {
+                    //System.out.println(object.getName() + " ONLINE");
                     menager.modifyTablist(p, object.getName(), String.valueOf(i), object.getPing(), object.getskin()[0], object.getskin()[1],  type);
                     i++;
                 }
 
                 //System.out.println("!!! " + object.getName() + " " + object.getHajs());
             }
-            java.util.Collections.sort(Queue);
-            for (String str: Queue) {
+            Queue.sort(Comparator.comparingDouble(PlayerObject::getHajs).reversed());
+            //System.out.println(Queue.toString());
+            for (PlayerObject str: Queue) {
                 if(i>38){
                     isOutOfLimit = true;
                     outoflimit++;
@@ -94,11 +94,11 @@ public class GenerateTabList {
                 }
                 //
                 if (i < 10) {
-                    menager.modifyTablist(p, str, "0" + i, 9999, skinvalue, skinsignature, type);
+                    menager.modifyTablist(p, str.getName(), "0" + i, 9999, skinvalue, skinsignature, type);
                     //System.out.println(i);
                     i++;
                 } else {
-                    menager.modifyTablist(p, str, String.valueOf(i), 9999, skinvalue, skinsignature, type);
+                    menager.modifyTablist(p, str.getName(), String.valueOf(i), 9999, skinvalue, skinsignature, type);
                     //System.out.println(i);
                     i++;
                 }
@@ -118,11 +118,11 @@ public class GenerateTabList {
             List<PlayerObject> deathList = new ArrayList<>();
             for (String str: YamlUsers) {
                 if(Bukkit.getPlayer(str) != null && Bukkit.getPlayer(str).isOnline()){
-                    deathList.add(new PlayerObject(0, "§3" + Bukkit.getPlayer(str).getStatistic(Statistic.DEATHS) + " §7" + str, String.valueOf(i), Bukkit.getPlayer(str).getStatistic(Statistic.DEATHS), 9999, null));
+                    deathList.add(new PlayerObject(0, "§3" + Bukkit.getPlayer(str).getStatistic(Statistic.DEATHS) + " §7" + str, String.valueOf(i), Bukkit.getPlayer(str).getStatistic(Statistic.DEATHS), 9999, new String[]{skinvalue, skinsignature}));
                 }else {
                     OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(str);
                     if(player != null){
-                        deathList.add(new PlayerObject(0, "§3" + player.getStatistic(Statistic.DEATHS) + " §7" + str, String.valueOf(i), player .getStatistic(Statistic.DEATHS), 9999, null));
+                        deathList.add(new PlayerObject(0, "§3" + player.getStatistic(Statistic.DEATHS) + " §7" + str, String.valueOf(i), player .getStatistic(Statistic.DEATHS), 9999, new String[]{skinvalue, skinsignature}));
                     }
                 }
             }
@@ -131,7 +131,8 @@ public class GenerateTabList {
                 if(i>79){
                     break;
                 }
-                menager.modifyTablist(p, object.getName(), String.valueOf(i), 9999, skinvalue, skinsignature,  type);
+                //System.out.println(Arrays.toString(object.getskin()));
+                menager.modifyTablist(p, object.getName(), String.valueOf(i), 9999, object.getskin()[0], object.getskin()[1],  type);
                 i++;
             }
             while (i != 80){
